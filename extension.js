@@ -17,7 +17,7 @@ async function activate(context) {
         let excludeSettings = vscode.workspace.getConfiguration('search').get('exclude');
 
         let gitignorePath = path.join(currentWorkspace, '.gitignore');
-        let ig = ignore().add(
+        let gitignore = ignore().add(
             fs.existsSync(gitignorePath) ? fs.readFileSync(gitignorePath).toString() : ''
         );
 
@@ -28,7 +28,7 @@ async function activate(context) {
             let relativePath = path.relative(currentWorkspace, filePath);
 
             for (let pattern in excludeSettings) {
-                return !(minimatch(uri.fsPath, pattern) || ig.ignores(relativePath));
+                return !(minimatch(uri.fsPath, pattern) || gitignore.ignores(relativePath));
             }
             return true;
         }).map(uri => ({
